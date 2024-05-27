@@ -1,0 +1,48 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f2fa;
+    margin: 0;
+    height: 100vh;
+}
+
+.container {
+    align-items: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    display: flex;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.searchbox {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 200px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #7e56ca;
+    ;
+    color: #fff;
+}
+
+button:hover {
+    background-color: #635283;
+}
+
+.weather-info {
+    margin-top: 20px;
+}
