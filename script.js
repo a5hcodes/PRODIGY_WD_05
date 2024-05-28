@@ -1,77 +1,37 @@
-const apiKey = '948ec2753c594c96b3e145708242705';
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            const { latitude, longitude } = position.coords;
-            fetchWeatherByCoords(latitude, longitude);
-        });
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-});
-
-async function fetchWeather() {
-    const location = document.getElementById('locationInput').value;
-    if (location) {
-        await fetchWeatherByLocation(location);
-    } else {
-        alert("Please enter a location!");
-    }
-}
-
-async function fetchWeatherByLocation(location) {
+function fetchWeather() {
+    const apiKey = "948ec2753c594c96b3e145708242705";
+    const location = document.getElementById("location").value;
     const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=no`;
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        if (response.ok) {
-            displayWeather(data);
+  
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error.message);
         } else {
-            alert('City not found. Please try again.');
+          displayWeather(data);
         }
-    } catch (error) {
+      })
+      .catch(error => {
         console.error('Error fetching weather data:', error);
-    }
-}
-
-async function fetchWeatherByCoords(lat, lon) {
-    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&aqi=no`;
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        if (response.ok) {
-            displayWeather(data);
-        } else {
-            alert('Location not found. Please try again.');
-        }
-    } catch (error) {
-        console.error('Error fetching weather data:', error);
-    }
-}
-
-function displayWeather(data) {
-    if (data.error) {
-        alert("Location not found!");
-        return;
-    }
-
-    const cityName = document.getElementById('cityName');
-    const date = document.getElementById('date');
-    const temperature = document.getElementById('temperature');
-    const description = document.getElementById('description');
-    const humidity = document.getElementById('humidity');
-    const windSpeed = document.getElementById('windSpeed');
-    const weatherIcon = document.getElementById('weather-icon');
-
-    cityName.textContent = `Weather in ${data.location.name}, ${data.location.region}, ${data.location.country}`;
-    date.textContent = new Date().toLocaleString();
-    temperature.innerHTML = `${data.current.temp_c}°C`;
-    description.textContent = `Condition: ${data.current.condition.text}`;
-    humidity.textContent = `Humidity: ${data.current.humidity}%`;
-    windSpeed.textContent = `Wind Speed: ${data.current.wind_kph} kph`;
-    weatherIcon.src = data.current.condition.icon;
-    weatherIcon.alt = data.current.condition.text;
-
-    document.getElementById('weather-info').style.display = 'block';
-}
+        alert('Error fetching weather data. Please try again.');
+      });
+  }
+  
+  function displayWeather(data) {
+    const { location, current } = data;
+    const { name, region, country } = location;
+    const { temp_c, condition, humidity, wind_kph } = current;
+    const { text, icon } = condition;
+  
+    document.getElementById("cityName").textContent = `${name}, ${region}, ${country}`;
+    document.getElementById("description").textContent = text;
+    document.getElementById("temperature").textContent = `Temperature: ${temp_c}°C`;
+    document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
+    document.getElementById("windSpeed").textContent = `Wind Speed: ${wind_kph} km/h`;
+  
+    const weatherIcon = document.createElement("img");
+    weatherIcon.src = `https:${icon}`;
+    weatherIcon.alt = text;
+    document.getElementById("description").appendChild(weatherIcon);
+  }
